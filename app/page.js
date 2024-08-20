@@ -14,9 +14,16 @@ export default function Home() {
     loadList ()
   }, []) 
   
-  function Add () {
+  function add () {
     const name = prompt("Name")
-      fetch(`http://localhost:4000/categories?name=${name}`)
+      fetch(`http://localhost:4000/categories`,{
+        method: "POST",
+        body:JSON.stringify({name: name}),
+        headers: { 
+          "Content-type": "application/json; charset=UTF-8"
+      } 
+      }
+      )
       .then(() => loadList())
   }
   function deleteMe(id) {
@@ -30,7 +37,10 @@ export default function Home() {
     const name = prompt ("Name..")
     fetch(`http://localhost:4000/categories/${id}`, {
       method:"PUT",
-      body: name,
+      body: JSON.stringify({name: name}),
+      headers: { 
+        "Content-type": "application/json; charset=UTF-8"
+    } 
     }
     )
     .then (() => {loadList()})
@@ -43,12 +53,12 @@ export default function Home() {
   return (
     <main>
          {articles.map((article,index) => (
-        <div key={article.name} className="flex gap-4">
+        <div key={article.id} className="flex gap-4">
           {article.name}
           <button className="border border-gray-500 rounded-md p-2 bg-slate-300" onClick={() => {editMe(article.id)}}>Edit</button>
           <button className="border border-gray-500 rounded-md p-2 bg-red-200" onClick={() => {deleteMe(article.id)}}>Delete</button>
         </div>))}
-        <button onClick={Add}>Add me</button>
+        <button onClick={add}>Add me</button>
     </main>
   )
   ;
